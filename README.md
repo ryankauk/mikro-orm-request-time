@@ -1,3 +1,5 @@
+This repository is a reproduction for mikro-orm accumulative find execution time during parallel requests.
+
 Step 1. Install
 
 ```bash
