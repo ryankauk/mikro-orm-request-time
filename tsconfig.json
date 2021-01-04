@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.packages.json",
+  "compilerOptions": {
+    "declaration": true,
+    "target": "es6",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "dist",
+    "composite": true,
+    "baseUrl": "./src",
+    "rootDir": "src"
+  },
+  "include": ["src"],
+  "exclude": ["**/*.d.ts", "examples/rt-api", ".eslintrc.js", "dist", "**/node_modules"]
+}
