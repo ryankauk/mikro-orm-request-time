@@ -10,7 +10,8 @@
   "scripts": {
     "dev": "ts-node-dev src/index.ts --ignore-watch node_modules --respawn --transpile-only",
     "ts-node": "ts-node --transpile-only",
-    "request": "yarn ts-node ./src/req"
+    "request": "yarn ts-node ./src/req",
+    "stats": "npx autocannon"
   },
   "dependencies": {
     "@mikro-orm/core": "^4.2.3",
@@ -21,7 +22,7 @@
     "debug": "^4.2.0",
     "express": "^4.17.1",
     "express-promise-router": "^4.0.1",
-    "mongoose": "^5.11.8",
+    "mongoose": "^5.11.10",
     "mongoose-simple-random": "^0.4.1"
   },
   "devDependencies": {

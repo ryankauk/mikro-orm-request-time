@@ -15,6 +15,9 @@ export const routes = (app: Express) => {
     })
   );
   app.use('/myEntity', MyEntityController);
-  //   app.use('/book', BookController);
   app.use((req, res) => res.status(404).json({ message: 'No route found' }));
+  app.use(function (err, req, res, next) {
+    // logic
+    console.error(err);
+  });
 };

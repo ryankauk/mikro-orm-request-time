@@ -1,17 +1,19 @@
 import { MikroORM, RequestContext } from '@mikro-orm/core';
 import { EntityManager, MongoDriver, MongoEntityRepository } from '@mikro-orm/mongodb';
+import { coreLogger } from '../core';
 
 import { logger } from '../api/logger';
 import { config } from './config';
 import { MyEntity } from './entities';
-
-const { log } = logger('core')('database');
+import * as mongoose from './mongoose';
+const { log } = coreLogger('database');
 export const DB_DI: {
   orm: MikroORM<MongoDriver>;
   repos: {
     myEntity: MongoEntityRepository<MyEntity>;
   };
-} = { repos: {} } as any;
+  mongoose: typeof mongoose.DI;
+} = { repos: {}, mongoose: mongoose.DI } as any;
 export function fork(next: (...args: any[]) => Promise<void>): Promise<void> {
   return RequestContext.createAsync(DB_DI.orm.em.fork(), next);
 }
@@ -31,22 +33,23 @@ export async function init({ clientUrl }: RTDatabaseOptions): Promise<void> {
         'Mikro orm requires BABEL_DECORATORS_COMPAT env variable during dev and build but will cause errors running after build.'
       );
     }
-    // DB_DI.orm.em = DB_DI.orm.em.fork();
-    // DB_DI.repos.tenant = DB_DI.orm.em.getRepository(Tenant);
-    // DB_DI.repos.shortLink = DB_DI.orm.em.getRepository(ShortLink);
-    // DB_DI.repos.client = DB_DI.orm.em.getRepository(Client);
+
     return;
   }
   if (DB_DI.orm && !(await DB_DI.orm.isConnected())) {
-    await DB_DI.orm.connect();
+    await Promise.all([DB_DI.orm.connect()]);
+
     log('reconnected');
   }
   log('initializing...');
-
-  DB_DI.orm = await MikroORM.init<MongoDriver>(config(clientUrl));
+  const [mikroOrm] = await Promise.all([
+    MikroORM.init<MongoDriver>(config(clientUrl)),
+    mongoose.start(),
+  ]);
+  DB_DI.orm = mikroOrm;
   DB_DI.repos.myEntity = DB_DI.orm.em.getRepository(MyEntity);
 }
 
 export function close() {
-  return DB_DI.orm.close();
+  return Promise.all([DB_DI.orm.close(), mongoose.close()]);
 }

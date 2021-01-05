@@ -12,12 +12,18 @@ Step 2. Start the server
 yarn dev
 ```
 
-Step 3. Send parallel request
+Step 3. Run autocanon
 
-`yarn request <numberOfParallelRequests>`
+**MikroORM**
 
 ```bash
-yarn request 100
+yarn stats http://localhost:5999/myEntity/mikro-orm -c 1000
+```
+
+**Mongoose**
+
+```bash
+yarn stats http://localhost:5999/myEntity/mongoose -c 1000
 ```
 
 You will see the time logs on the server of the time it takes for mikro-orm to execute the query.
