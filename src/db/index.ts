@@ -44,7 +44,7 @@ export async function init({ clientUrl }: RTDatabaseOptions): Promise<void> {
   log('initializing...');
   const [mikroOrm] = await Promise.all([
     MikroORM.init<MongoDriver>(config(clientUrl)),
-    mongoose.start(),
+    mongoose.start(clientUrl),
   ]);
   DB_DI.orm = mikroOrm;
   DB_DI.repos.myEntity = DB_DI.orm.em.getRepository(MyEntity);
