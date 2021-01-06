@@ -7,7 +7,8 @@ import {
   PrimaryKey,
   Property,
 } from '@mikro-orm/core';
-import { ObjectId } from 'mongoose';
+// import { ObjectId } from 'mongoose';
+import { ObjectId } from '@mikro-orm/mongodb';
 
 @Entity({})
 export class MyEntity extends BaseEntity<MyEntity, '_id'> {
