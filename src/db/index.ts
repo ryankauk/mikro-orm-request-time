@@ -4,13 +4,14 @@ import { coreLogger } from '../core';
 
 import { logger } from '../api/logger';
 import { config } from './config';
-import { MyEntity } from './entities';
+import { MyEntity, MyEntityTwo } from './entities';
 import * as mongoose from './mongoose';
 const { log } = coreLogger('database');
 export const DB_DI: {
   orm: MikroORM<MongoDriver>;
   repos: {
     myEntity: MongoEntityRepository<MyEntity>;
+    myEntityTwo: MongoEntityRepository<MyEntityTwo>;
   };
   mongoose: typeof mongoose.DI;
 } = { repos: {}, mongoose: mongoose.DI } as any;
@@ -48,6 +49,7 @@ export async function init({ clientUrl }: RTDatabaseOptions): Promise<void> {
   ]);
   DB_DI.orm = mikroOrm;
   DB_DI.repos.myEntity = DB_DI.orm.em.getRepository(MyEntity);
+  DB_DI.repos.myEntityTwo = DB_DI.orm.em.getRepository(MyEntityTwo);
 }
 
 export function close() {
